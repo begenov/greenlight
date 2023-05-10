@@ -10,12 +10,12 @@ import (
 
 func (app *application) healthcheckHandler(ctx *gin.Context) {
 
-	data := map[string]string{
+	env := envelope{
 		"status":      "available",
 		"environment": app.config.env,
 		"version":     version,
 	}
-	err := app.writeJSON(ctx, http.StatusOK, data, nil)
+	err := app.writeJSON(ctx, http.StatusOK, env, nil)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"ERROR": "The server encountered a problem and could not process your request",
@@ -46,7 +46,7 @@ func (app *application) showMovieHandler(ctx *gin.Context) {
 		Version:  1,
 	}
 
-	err = app.writeJSON(ctx, http.StatusOK, movie, nil)
+	err = app.writeJSON(ctx, http.StatusOK, envelope{"movies": movie}, nil)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"ERROR": "The server encountered a problem and could not process your request",

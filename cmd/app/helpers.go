@@ -9,6 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type envelope map[string]any
+
 func (app *application) readIDParam(params gin.Params) (int64, error) {
 	id, err := strconv.ParseInt(params.ByName("id"), 10, 64)
 	if err != nil {
@@ -17,9 +19,9 @@ func (app *application) readIDParam(params gin.Params) (int64, error) {
 	return id, nil
 }
 
-func (app *application) writeJSON(ctx *gin.Context, status int, data any, headers http.Header) error {
+func (app *application) writeJSON(ctx *gin.Context, status int, data envelope, headers http.Header) error {
 	var data1 any
-	js, err := json.Marshal(data)
+	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
 	}
