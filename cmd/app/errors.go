@@ -9,7 +9,7 @@ import (
 const (
 	serverError           = "the server encoutered a probleb and could not process your request"
 	notFoundError         = "the requested resource could not be found"
-	methodNotAllowedError = "the %s method is not supported for this resource"
+	methodNotAllowedError = "the method is not supported for this resource"
 )
 
 func (app *application) logError(r *http.Request, err error) {
