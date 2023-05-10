@@ -17,10 +17,7 @@ func (app *application) healthcheckHandler(ctx *gin.Context) {
 	}
 	err := app.writeJSON(ctx, http.StatusOK, env, nil)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"ERROR": "The server encountered a problem and could not process your request",
-		})
-		return
+		app.errorResponse(ctx, 500, serverError, err)
 	}
 }
 
@@ -31,10 +28,7 @@ func (app *application) createMovieHandler(ctx *gin.Context) {
 func (app *application) showMovieHandler(ctx *gin.Context) {
 	id, err := app.readIDParam(ctx.Params)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"ERROR": "showMovieHandler Not Found",
-		})
-		return
+		app.errorResponse(ctx, http.StatusNotFound, notFoundError, err)
 	}
 
 	movie := data.Movie{
@@ -48,9 +42,6 @@ func (app *application) showMovieHandler(ctx *gin.Context) {
 
 	err = app.writeJSON(ctx, http.StatusOK, envelope{"movies": movie}, nil)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"ERROR": "The server encountered a problem and could not process your request",
-		})
-		return
+		app.errorResponse(ctx, http.StatusInternalServerError, serverError, err)
 	}
 }
