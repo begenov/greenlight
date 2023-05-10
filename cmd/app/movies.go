@@ -2,7 +2,9 @@ package main
 
 import (
 	"net/http"
+	"time"
 
+	"github.com/begenov/greenlight/internal/data"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,5 +36,21 @@ func (app *application) showMovieHandler(ctx *gin.Context) {
 		})
 		return
 	}
-	ctx.String(http.StatusOK, "show the details of movie %d", id)
+
+	movie := data.Movie{
+		ID:       id,
+		CreateAt: time.Now(),
+		Title:    "Casablanca",
+		Runtime:  102,
+		Genres:   []string{"drama", "romance", "war"},
+		Version:  1,
+	}
+
+	err = app.writeJSON(ctx, http.StatusOK, movie, nil)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"ERROR": "The server encountered a problem and could not process your request",
+		})
+		return
+	}
 }
