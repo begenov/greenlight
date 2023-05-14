@@ -1,10 +1,12 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
 	"github.com/begenov/greenlight/internal/data"
+	"github.com/begenov/greenlight/internal/validator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,6 +36,20 @@ func (app *application) createMovieHandler(ctx *gin.Context) {
 		app.errorResponse(ctx, http.StatusBadRequest, err.Error(), err)
 		return
 	}
+
+	movie := &data.Movie{
+		Title:   input.Title,
+		Year:    input.Year,
+		Runtime: input.Runtime,
+		Genres:  input.Genres,
+	}
+
+	v := validator.NewValidator()
+
+	if data.ValidateMovie(v, movie); !v.Valid() {
+		app.errorResponse(ctx, http.StatusUnprocessableEntity, v.Errors, errors.New("error in valid"))
+	}
+
 	ctx.String(http.StatusOK, "%+v\n", input)
 
 }
