@@ -30,7 +30,7 @@ func (app *application) createMovieHandler(ctx *gin.Context) {
 		Genres  []string `json:"genres"`
 	}
 
-	if err := ctx.BindJSON(&input); err != nil {
+	if err := app.readJSON(ctx, &input); err != nil {
 		app.errorResponse(ctx, http.StatusBadRequest, err.Error(), err)
 		return
 	}
